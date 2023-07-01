@@ -5,7 +5,6 @@ import addressRepository, { CreateAddressParams } from '@/repositories/address-r
 import enrollmentRepository, { CreateEnrollmentParams } from '@/repositories/enrollment-repository';
 import { exclude } from '@/utils/prisma-utils';
 
-// TODO - Receber o CEP por parâmetro nesta função.
 async function getAddressFromCEP(cep: string): Promise<Endereco> {
 
   
@@ -24,7 +23,7 @@ async function getAddressFromCEP(cep: string): Promise<Endereco> {
     cidade: result.data.localidade,
     uf: result.data.uf
   }
-  // FIXME: não estamos interessados em todos os campos
+
   return endereco;
 }
 
@@ -65,7 +64,7 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
   const address = getAddressForUpsert(params.address);
 
   // TODO - Verificar se o CEP é válido antes de associar ao enrollment.
-  getAddressFromCEP(address.cep)
+  const end = getAddressFromCEP(address.cep)
 
   const newEnrollment = await enrollmentRepository.upsert(params.userId, enrollment, exclude(enrollment, 'userId'));
 
