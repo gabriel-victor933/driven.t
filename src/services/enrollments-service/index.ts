@@ -9,11 +9,9 @@ async function getAddressFromCEP(cep: string): Promise<Endereco> {
 
   
   const result = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
-  console.log(result)
 
   if (result.data?.erro == true ||result.status == 400) {
-    console.log("erro")
-    throw notFoundError();
+   throw notFoundError();
   }
 
   const endereco: Endereco = {
