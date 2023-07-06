@@ -5,8 +5,13 @@ async function getTicketsTypes(){
     return types
 }
 
+async function getTickets(userId: number) {
+    return {}
+}   
+
 const ticketsServices = {
-    getTicketsTypes
+    getTicketsTypes,
+    getTickets
 }
 
 export default ticketsServices

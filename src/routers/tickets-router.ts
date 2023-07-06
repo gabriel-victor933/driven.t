@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { authenticateToken, validateBody } from '@/middlewares';
-import { getTicketsTypes } from "@/controllers/tickets-controller";
+import { getTicketsTypes, getTickets } from "@/controllers/tickets-controller";
 
 const ticketRouter = Router()
 
 ticketRouter
-    //.all("/*",authenticateToken) //remover o comentário depois de fazer tudo
+    .all("/*",authenticateToken) //remover o comentário depois de fazer tudo
     .get("/types",getTicketsTypes)
-    .get("/",(req,res)=>res.send("tickets get"))
+    .get("/",getTickets)
     .post("/",(req,res)=>res.send("tickets post"))
 
 

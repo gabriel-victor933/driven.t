@@ -13,3 +13,15 @@ export async function getTicketsTypes(req: AuthenticatedRequest,res: Response){
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).send("erro")
     }
 }
+
+export async function getTickets(req: AuthenticatedRequest,res: Response){
+
+    const { userId } = req;
+    try {
+        const tickets = await ticketsServices.getTickets(userId)
+
+        return res.status(httpStatus.OK).send(tickets)
+    } catch(error){
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send("erro")
+    }
+}
