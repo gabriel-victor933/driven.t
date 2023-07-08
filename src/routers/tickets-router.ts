@@ -6,7 +6,7 @@ import { ticketTypeSchema } from "@/schemas/tickets-schemas";
 const ticketRouter = Router()
 
 ticketRouter
-    //.all("/*",authenticateToken) FIXME: remover comentario
+    .all("/*",authenticateToken) 
     .get("/types",getTicketsTypes)
     .get("/",getTickets)
     .post("/",validateBody(ticketTypeSchema),postTickets)
