@@ -7,6 +7,11 @@ async function getTicketsTypes(){
     return types
 }
 
+async function getTicketsTypeById(ticketTypeId: number){
+    const type = await ticketsRepository.getTicketsTypeById(ticketTypeId)
+    return type
+}
+
 async function getTickets(userId: number) {
     const enrollment = await enrollmentRepository.findWithAddressByUserId(userId)
     if(!enrollment) throw {type: "application",error: httpStatus.NOT_FOUND}
@@ -17,9 +22,23 @@ async function getTickets(userId: number) {
     return tickets
 }   
 
+async function postTickets(userId: number, ticketTypeId: number) {
+    
+    const enrollment = await enrollmentRepository.findWithAddressByUserId(userId)
+    if(!enrollment) throw {type: "application",error: httpStatus.NOT_FOUND}
+
+    const type = await getTicketsTypeById(ticketTypeId)
+    if(!type) throw {type: "application",error: httpStatus.NOT_FOUND}
+
+    const ticket = await ticketsRepository.postTicket(enrollment.id,ticketTypeId)
+
+    return ticket
+} 
+
 const ticketsServices = {
     getTicketsTypes,
-    getTickets
+    getTickets,
+    postTickets
 }
 
 export default ticketsServices

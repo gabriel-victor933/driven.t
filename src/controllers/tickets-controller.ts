@@ -27,3 +27,19 @@ export async function getTickets(req: AuthenticatedRequest,res: Response){
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).send("erro")
     }
 }
+
+export async function postTickets(req: AuthenticatedRequest,res: Response){
+
+    const { userId } = req;
+    const { ticketTypeId } = req.body
+    
+    try {
+        const tickets = await ticketsServices.postTickets(userId,ticketTypeId)
+        return res.status(httpStatus.CREATED).send(tickets)
+
+    } catch(error){
+        if(error.type == "application") return res.sendStatus(error.error)
+
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send("erro")
+    }
+}
