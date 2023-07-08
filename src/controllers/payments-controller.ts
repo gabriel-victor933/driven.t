@@ -2,12 +2,13 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
 import paymentServices from '@/services/payment-service';
+import { TicketId } from '@/protocols';
 
 
 export async function postPayment(req: AuthenticatedRequest,res: Response){
 
     const { userId } = req
-    console.log(userId)
+
     try {
         const payment = await paymentServices.postPayment(userId,req.body)
 
@@ -21,7 +22,13 @@ export async function postPayment(req: AuthenticatedRequest,res: Response){
 
 export async function getPayment(req: AuthenticatedRequest,res: Response){
 
+    const { userId } = req
+
+    const {ticketId} = req.query as TicketId
+
     try {
+        console.log(ticketId)
+
         return res.send("get")
 
     } catch(error){
@@ -29,3 +36,4 @@ export async function getPayment(req: AuthenticatedRequest,res: Response){
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
+

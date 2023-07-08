@@ -55,3 +55,7 @@ export type PaymentBody = {
     cvv: number
 	}
 }
+
+export type TicketId = {
+  ticketId: string
+}
