@@ -23,7 +23,7 @@ async function getPayment(userId: number,ticketId: number){
 }
 
 async function verifyTicket(userId: number, ticketId: number){
-    await ticketsServices.getTicketById(ticketId)
+    //await ticketsServices.getTicketById(ticketId)
 
     const ticket = await ticketsServices.getTickets(userId)
 
