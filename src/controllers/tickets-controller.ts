@@ -19,7 +19,7 @@ export async function getTickets(req: AuthenticatedRequest,res: Response){
     const { userId } = req;
     try {
         const tickets = await ticketsServices.getTickets(userId)
-        console.log(tickets)
+        
         return res.status(httpStatus.OK).send(tickets)
     } catch(error){
         if(error.type == "application") return res.sendStatus(error.error)
