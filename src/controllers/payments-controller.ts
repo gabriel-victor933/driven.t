@@ -27,9 +27,10 @@ export async function getPayment(req: AuthenticatedRequest,res: Response){
     const {ticketId} = req.query as TicketId
 
     try {
-        console.log(ticketId)
-
-        return res.send("get")
+        
+        const payment = await paymentServices.getPayment(userId,parseInt(ticketId))
+        console.log(payment)
+        return res.status(httpStatus.OK).send(payment)
 
     } catch(error){
         if(error.type == "application") return res.sendStatus(error.error)

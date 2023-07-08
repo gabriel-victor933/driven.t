@@ -12,8 +12,17 @@ async function postPayment(paymentInfo: PaymentBody, value: number){
     })
 }
 
+async function getPayment(ticketId: number){
+    return prisma.payment.findFirst({
+        where: {
+            ticketId
+        }
+    })
+}
+
 const paymentRepository = {
-    postPayment
+    postPayment,
+    getPayment
 }
 
 export default paymentRepository
