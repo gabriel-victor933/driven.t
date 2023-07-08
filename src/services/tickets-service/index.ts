@@ -35,10 +35,19 @@ async function postTickets(userId: number, ticketTypeId: number) {
     return ticket
 } 
 
+async function getTicketById(ticketId: number){
+    const ticket = await ticketsRepository.getTicketById(ticketId)
+
+    if(!ticket) throw {type: "application",error: httpStatus.NOT_FOUND}
+
+    return ticket
+}
+
 const ticketsServices = {
     getTicketsTypes,
     getTickets,
-    postTickets
+    postTickets,
+    getTicketById
 }
 
 export default ticketsServices

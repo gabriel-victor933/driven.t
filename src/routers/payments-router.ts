@@ -6,7 +6,7 @@ import { paymentSchema } from "@/schemas";
 const paymentRoute = Router()
 
 paymentRoute
-    //.all("/*",authenticateToken) FIXME: remover comentario
+    .all("/*",authenticateToken) 
     .get("/",getPayment)
     .post("/process",validateBody(paymentSchema),postPayment)
 
