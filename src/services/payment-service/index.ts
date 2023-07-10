@@ -6,12 +6,14 @@ import ticketsRepository from "@/repositories/tickets-repository";
 
 
 async function postPayment(userId: number, paymentInfo: PaymentBody) {
-
+    console.log(paymentInfo)
     const price = await verifyTicket(userId,paymentInfo.ticketId)
 
     await ticketsRepository.paidTicket(paymentInfo.ticketId)
     
     const payment = await paymentRepository.postPayment(paymentInfo, price)
+    
+
     return payment
 }
 

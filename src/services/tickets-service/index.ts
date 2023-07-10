@@ -47,8 +47,8 @@ async function postTickets(userId: number, ticketTypeId: number) {
 
 async function getTicketById(ticketId: number){
     const ticket = await ticketsRepository.getTicketById(ticketId)
-
-    if(!ticket) throw {type: "application",error: httpStatus.NOT_FOUND,message: "ticket doenst exist"}
+    console.log(ticket)
+    if(!ticket) throw {type: "application",error: httpStatus.NOT_FOUND,message: "tticket doenst exist"}
 
     return ticket
 }
