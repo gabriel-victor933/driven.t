@@ -13,8 +13,10 @@ export async function postPayment(req: AuthenticatedRequest,res: Response){
         const payment = await paymentServices.postPayment(userId,req.body)
 
         return res.status(httpStatus.OK).send(payment)
+
     } catch(error){
         console.error(error)
+        console.log(error)
         if(error.type == "application") return res.sendStatus(error.error)
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
