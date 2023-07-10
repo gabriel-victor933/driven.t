@@ -51,7 +51,7 @@ export type PaymentBody = {
 		issuer: string,
     number: number,
     name: string,
-    expirationDate: Date,
+    expirationDate: String,
     cvv: number
 	}
 }
