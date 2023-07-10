@@ -14,13 +14,23 @@ async function getTicketsTypeById(ticketTypeId: number){
 
 async function getTickets(userId: number) {
     const enrollment = await enrollmentRepository.findWithAddressByUserId(userId)
-    if(!enrollment) throw {type: "application",error: httpStatus.NOT_FOUND}
+    if(!enrollment) throw {type: "application",error: httpStatus.NOT_FOUND,message: "Enrollment not found"}
 
     const tickets = await ticketsRepository.getTickets(enrollment.id)
-    if(!tickets) throw {type: "application",error: httpStatus.NOT_FOUND}
+    if(!tickets) throw {type: "application",error: httpStatus.NOT_FOUND, message: "user dont have any ticket"}
+    
+    return tickets
+}  
+
+async function getAllTickets(userId: number) {
+    const enrollment = await enrollmentRepository.findWithAddressByUserId(userId)
+    if(!enrollment) throw {type: "application",error: httpStatus.UNAUTHORIZED, message: "user doesnt own the ticked"}
+
+    const tickets = await ticketsRepository.getTickets(enrollment.id)
+    if(!tickets) throw {type: "application",error: httpStatus.UNAUTHORIZED, message: "user doesnt own the ticked"}
 
     return tickets
-}   
+}  
 
 async function postTickets(userId: number, ticketTypeId: number) {
     
@@ -38,7 +48,7 @@ async function postTickets(userId: number, ticketTypeId: number) {
 async function getTicketById(ticketId: number){
     const ticket = await ticketsRepository.getTicketById(ticketId)
 
-    if(!ticket) throw {type: "application",error: httpStatus.NOT_FOUND}
+    if(!ticket) throw {type: "application",error: httpStatus.NOT_FOUND,message: "ticket doenst exist"}
 
     return ticket
 }
@@ -47,7 +57,8 @@ const ticketsServices = {
     getTicketsTypes,
     getTickets,
     postTickets,
-    getTicketById
+    getTicketById,
+    getAllTickets
 }
 
 export default ticketsServices

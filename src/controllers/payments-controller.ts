@@ -15,9 +15,8 @@ export async function postPayment(req: AuthenticatedRequest,res: Response){
         return res.status(httpStatus.OK).send(payment)
 
     } catch(error){
-        console.error(error)
         console.log(error)
-        if(error.type == "application") return res.sendStatus(error.error)
+        if(error.type === "application") return res.status(error.error).send(error?.message)
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
@@ -31,11 +30,11 @@ export async function getPayment(req: AuthenticatedRequest,res: Response){
     try {
         
         const payment = await paymentServices.getPayment(userId,parseInt(ticketId))
-        console.log(payment)
         return res.status(httpStatus.OK).send(payment)
 
     } catch(error){
-        if(error.type == "application") return res.sendStatus(error.error)
+        console.log(error)
+        if(error.type === "application") return res.status(error.error).send(error?.message)
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
