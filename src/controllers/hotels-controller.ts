@@ -24,7 +24,7 @@ export async function getHotelRooms(req: AuthenticatedRequest,res: Response){
     if(isNaN(hotelId)) return res.sendStatus(httpStatus.BAD_REQUEST)
 
     try {
-        const hotel = await hotelsServices.getHotelRooms(userId)
+        const hotel = await hotelsServices.getHotelRooms(userId,hotelId)
         return res.send(hotel)
 
     } catch(error){

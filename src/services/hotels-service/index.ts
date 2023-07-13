@@ -11,9 +11,11 @@ async function getHotels(userId: number){
     return hotels
 }
 
-async function getHotelRooms(userId: number){
+async function getHotelRooms(userId: number, hotelId: number){
     await checkPaidTicket(userId)
-    const hotel = await hotelsRepository.
+    const hotel = await hotelsRepository.getHotelRooms(hotelId)
+    if(!hotel) throw notFound("Hotel not found")
+
     return hotel
 }
 
