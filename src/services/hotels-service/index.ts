@@ -1,9 +1,14 @@
 import enrollmentsService from "@/repositories/enrollment-repository"
 import { notFound,paymentRequired } from "@/errors"
 import ticketsRepository from "@/repositories/tickets-repository"
+import hotelsRepository from "@/repositories/hotels-repository"
 
 async function getHotels(userId: number){
     await checkPaidTicket(userId)
+    const hotels = await hotelsRepository.getHotels()
+    if(hotels.length === 0) throw notFound("Hotel not found")
+
+    return hotels
 }
 
 async function getHotelRooms(userId: number){
