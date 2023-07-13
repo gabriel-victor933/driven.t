@@ -62,3 +62,9 @@ export type PaymentParams = Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>;
 export type InputTicketBody = {
   ticketTypeId: number;
 };
+
+export type Errors = {
+    type: string;
+    statusCode: number;
+    message?: string;
+}

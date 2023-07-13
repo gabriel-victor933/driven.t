@@ -1,0 +1,26 @@
+import httpStatus from "http-status"
+import { Errors } from "@/protocols"
+
+export function notFound(message: string): Errors{
+    return {
+        type: "application",
+        statusCode: httpStatus.NOT_FOUND, 
+        message: message
+    }
+}
+
+export function paymentRequired(message: string): Errors{
+    return {
+        type: "application",
+        statusCode: httpStatus.PAYMENT_REQUIRED, 
+        message: message
+    }
+}
+
+export function badRequest(message: string): Errors{
+    return {
+        type: "application",
+        statusCode: httpStatus.BAD_REQUEST, 
+        message: message
+    }
+}
