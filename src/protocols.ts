@@ -66,5 +66,5 @@ export type InputTicketBody = {
 export type Errors = {
     type: string;
     statusCode: number;
-    message?: string;
+    message: string | void;
 }

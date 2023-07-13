@@ -1,7 +1,7 @@
 import httpStatus from "http-status"
 import { Errors } from "@/protocols"
 
-export function notFound(message: string): Errors{
+export function notFound(message: string | void ): Errors{
     return {
         type: "application",
         statusCode: httpStatus.NOT_FOUND, 
@@ -9,7 +9,7 @@ export function notFound(message: string): Errors{
     }
 }
 
-export function paymentRequired(message: string): Errors{
+export function paymentRequired(message: string | void): Errors{
     return {
         type: "application",
         statusCode: httpStatus.PAYMENT_REQUIRED, 
@@ -17,7 +17,7 @@ export function paymentRequired(message: string): Errors{
     }
 }
 
-export function badRequest(message: string): Errors{
+export function badRequest(message: string | void): Errors{
     return {
         type: "application",
         statusCode: httpStatus.BAD_REQUEST, 
