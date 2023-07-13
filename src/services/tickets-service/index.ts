@@ -1,64 +1,43 @@
-import enrollmentRepository from "@/repositories/enrollment-repository"
-import ticketsRepository from "@/repositories/tickets-repository"
-import httpStatus from "http-status"
+import { Ticket, TicketStatus, TicketType } from '@prisma/client';
+import { notFoundError } from '@/errors';
+import enrollmentRepository from '@/repositories/enrollment-repository';
+import ticketsRepository from '@/repositories/tickets-repository';
+import { CreateTicketParams } from '@/protocols';
 
-async function getTicketsTypes(){
-    const types = await ticketsRepository.getTicketsTypes()
-    return types
+async function getTicketType(): Promise<TicketType[]> {
+  const ticketTypes: TicketType[] = await ticketsRepository.findTicketTypes();
+  if (!ticketTypes) throw notFoundError();
+
+  return ticketTypes;
 }
 
-async function getTicketsTypeById(ticketTypeId: number){
-    const type = await ticketsRepository.getTicketsTypeById(ticketTypeId)
-    return type
+async function getTicketByUserId(userId: number): Promise<Ticket> {
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  if (!enrollment) throw notFoundError();
+
+  const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
+  if (!ticket) throw notFoundError();
+
+  return ticket;
 }
 
-async function getTickets(userId: number) {
-    const enrollment = await enrollmentRepository.findWithAddressByUserId(userId)
-    if(!enrollment) throw {type: "application",error: httpStatus.NOT_FOUND,message: "Enrollment not found"}
+async function createTicket(userId: number, ticketTypeId: number): Promise<Ticket> {
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  if (!enrollment) throw notFoundError();
 
-    const tickets = await ticketsRepository.getTickets(enrollment.id)
-    if(!tickets) throw {type: "application",error: httpStatus.NOT_FOUND, message: "user dont have any ticket"}
-    
-    return tickets
-}  
+  const ticketData: CreateTicketParams = {
+    ticketTypeId,
+    enrollmentId: enrollment.id,
+    status: TicketStatus.RESERVED,
+  };
 
-async function getAllTickets(userId: number) {
-    const enrollment = await enrollmentRepository.findWithAddressByUserId(userId)
-    if(!enrollment) throw {type: "application",error: httpStatus.UNAUTHORIZED, message: "user doesnt own the ticked"}
+  await ticketsRepository.createTicket(ticketData);
 
-    const tickets = await ticketsRepository.getTickets(enrollment.id)
-    if(!tickets) throw {type: "application",error: httpStatus.UNAUTHORIZED, message: "user doesnt own the ticked"}
+  const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
 
-    return tickets
-}  
-
-async function postTickets(userId: number, ticketTypeId: number) {
-    
-    const enrollment = await enrollmentRepository.findWithAddressByUserId(userId)
-    if(!enrollment) throw {type: "application",error: httpStatus.NOT_FOUND}
-
-    const type = await getTicketsTypeById(ticketTypeId)
-    if(!type) throw {type: "application",error: httpStatus.NOT_FOUND}
-
-    const ticket = await ticketsRepository.postTicket(enrollment.id,ticketTypeId)
-
-    return ticket
-} 
-
-async function getTicketById(ticketId: number){
-    const ticket = await ticketsRepository.getTicketById(ticketId)
-    console.log(ticket)
-    if(!ticket) throw {type: "application",error: httpStatus.NOT_FOUND,message: "tticket doenst exist"}
-
-    return ticket
+  return ticket;
 }
 
-const ticketsServices = {
-    getTicketsTypes,
-    getTickets,
-    postTickets,
-    getTicketById,
-    getAllTickets
-}
+const ticketService = { getTicketType, getTicketByUserId, createTicket };
 
-export default ticketsServices
+export default ticketService;

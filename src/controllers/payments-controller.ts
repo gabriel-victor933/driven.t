@@ -1,41 +1,42 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
-import paymentServices from '@/services/payment-service';
-import { TicketId } from '@/protocols';
+import paymentsService from '@/services/payments-service';
 
+export async function getPaymentByTicketId(req: AuthenticatedRequest, res: Response) {
+  try {
+    const ticketId = Number(req.query.ticketId);
+    const { userId } = req;
 
-export async function postPayment(req: AuthenticatedRequest,res: Response){
+    if (!ticketId) return res.sendStatus(httpStatus.BAD_REQUEST);
 
-    const { userId } = req
+    const payment = await paymentsService.getPaymentByTicketId(userId, ticketId);
+    if (!payment) return res.sendStatus(httpStatus.NOT_FOUND);
 
-    try {
-        const payment = await paymentServices.postPayment(userId,req.body)
-
-        return res.status(httpStatus.OK).send(payment)
-
-    } catch(error){
-        console.log(error)
-        if(error.type === "application") return res.status(error.error).send(error?.message)
-        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
+    return res.status(httpStatus.OK).send(payment);
+  } catch (error) {
+    if (error.name === 'UnauthorizedError') {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
     }
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
 }
 
-export async function getPayment(req: AuthenticatedRequest,res: Response){
+export async function paymentProcess(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const { ticketId, cardData } = req.body;
 
-    const { userId } = req
+  try {
+    if (!ticketId || !cardData) return res.sendStatus(httpStatus.BAD_REQUEST);
 
-    const {ticketId} = req.query as TicketId
+    const payment = await paymentsService.paymentProcess(ticketId, userId, cardData);
+    if (!payment) return res.sendStatus(httpStatus.NOT_FOUND);
 
-    try {
-        
-        const payment = await paymentServices.getPayment(userId,parseInt(ticketId))
-        return res.status(httpStatus.OK).send(payment)
-
-    } catch(error){
-        console.log(error)
-        if(error.type === "application") return res.status(error.error).send(error?.message)
-        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
+    return res.status(httpStatus.OK).send(payment);
+  } catch (error) {
+    if (error.name === 'UnauthorizedError') {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
     }
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
 }
-
