@@ -12,7 +12,9 @@ async function getHotels(userId: number){
 }
 
 async function getHotelRooms(userId: number){
-
+    await checkPaidTicket(userId)
+    const hotel = await hotelsRepository.
+    return hotel
 }
 
 async function checkPaidTicket(userId: number){
@@ -20,6 +22,7 @@ async function checkPaidTicket(userId: number){
     if(!enrollment) throw notFound("Enrollment not found")
 
     const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id)
+    if(!ticket) throw notFound("Ticket not found")
     if(ticket.status !== "PAID"||ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) throw paymentRequired()
 }
 
