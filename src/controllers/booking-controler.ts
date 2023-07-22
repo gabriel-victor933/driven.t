@@ -10,8 +10,8 @@ export async function postBooking(req: AuthenticatedRequest,res: Response){
         const bookingId = await bookingService.postBooking(req.userId,parseInt(req.body.roomId))
         return res.status(httpStatus.OK).send({bookingId})
     } catch(err){
-        if(err.type === 'application') return res.status(err.status).send(err.message)
-        return res.send(httpStatus.INTERNAL_SERVER_ERROR)
+        return res.status(err.status).send(err.message)
+        
     }
 }
 
@@ -24,8 +24,8 @@ export async function putBooking(req: AuthenticatedRequest,res: Response){
         const id = await bookingService.putBooking(req.userId,parseInt(req.body.roomId),bookingId)
         return res.status(httpStatus.OK).send({bookingId: id})
     } catch(err){
-        if(err.type === 'application') return res.status(err.status).send(err.message)
-        return res.send(httpStatus.INTERNAL_SERVER_ERROR)
+        return res.status(err.status).send(err.message)
+        
     }
 }
 
@@ -36,8 +36,8 @@ export async function getBooking(req: AuthenticatedRequest,res: Response){
 
         return res.status(httpStatus.OK).send(booking)
     } catch(err){
-        if(err.type === 'application') return res.status(err.status).send(err.message)
-        return res.send(httpStatus.INTERNAL_SERVER_ERROR)
+        return res.status(err.status).send(err.message)
+        
     }
 }
 
