@@ -26,7 +26,7 @@ async function putBooking(userId: number, roomId: number, bookingId: number){
     await getBookingById(bookingId, userId)
 
     const booking = await bookingRepository.updateBooking(bookingId,roomId)
-    console.log(booking)
+    
     return booking.id
 }
 
