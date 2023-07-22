@@ -3,6 +3,14 @@ import ticketsRepository from "@/repositories/tickets-repository"
 import bookingRepository from "@/repositories/booking-repository"
 import { forbiddenError, notFound } from "@/errors"
 
+async function getBookingByUserId(userId: number){
+    const booking = await bookingRepository.getBookingByUserId(userId)
+
+    if(!booking) throw notFound("User has no booking")
+
+    return {id: booking.id, Room: booking.Room}
+}
+
 async function postBooking(userId: number, roomId: number){
     await validateUser(userId)
    
@@ -10,6 +18,24 @@ async function postBooking(userId: number, roomId: number){
 
     const booking = await bookingRepository.createBooking(userId,roomId)
     return booking.id
+}
+
+async function putBooking(userId: number, roomId: number, bookingId: number){
+    await verifyRoom(roomId)
+
+    await getBookingById(bookingId, userId)
+
+    const booking = await bookingRepository.updateBooking(bookingId,roomId)
+    console.log(booking)
+    return booking.id
+}
+
+async function getBookingById(bookingId: number, userId: number){
+    const booking = await bookingRepository.getBookingById(bookingId,userId)
+    console.log(booking)
+    if(!booking) throw notFound("User has no Booking")
+
+    return booking
 }
 
 async function validateUser(userId: number){
@@ -29,7 +55,9 @@ async function verifyRoom(roomId: number){
 }
 
 const bookingService = {
-    postBooking
+    postBooking,
+    putBooking,
+    getBookingByUserId
 }
 
 export default bookingService

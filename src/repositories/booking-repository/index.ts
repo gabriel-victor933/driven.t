@@ -17,10 +17,38 @@ function createBooking(userId: number, roomId: number){
     })
 }
 
+function getBookingById(bookingId: number, userId: number){
+    return prisma.booking.findFirst({
+        where: {
+            AND: [
+                {id: bookingId},
+                {userId: userId}
+            ]
+        },
+    })
+}
+
+function getBookingByUserId(userId: number){
+    return prisma.booking.findFirst({
+        where: {userId},
+        include: {Room: true}
+    })
+}
+
+function updateBooking(bookingId: number, roomId: number){
+    return prisma.booking.update({
+        where: {id: bookingId},
+        data: {roomId}
+    })
+}
+
 
 const bookingRepository = {
     getRoomById,
-    createBooking
+    createBooking,
+    getBookingById,
+    updateBooking,
+    getBookingByUserId
 }
 
 export default bookingRepository
