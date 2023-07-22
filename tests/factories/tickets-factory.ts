@@ -44,3 +44,24 @@ export async function createTicketTypeWithHotel() {
     },
   });
 }
+
+export function createTicketData(status: 'PAID' | 'RESERVED', isRemote: boolean, includesHotel: boolean){
+  const ticketTypeID = parseInt(faker.random.numeric(4))
+  return  {
+    id: parseInt(faker.random.numeric(4)),
+    ticketTypeId: ticketTypeID,
+    enrollmentId: parseInt(faker.random.numeric(4)),
+    status: status,
+    createdAt: faker.datatype.datetime(),
+    updatedAt: faker.datatype.datetime(),
+    TicketType: {
+      id: ticketTypeID,
+      name: faker.name.firstName(),
+      price: parseInt(faker.random.numeric(4)),
+      isRemote: isRemote,
+      includesHotel: includesHotel,
+      createdAt: faker.datatype.datetime(),
+      updatedAt: faker.datatype.datetime()
+    }
+  }
+}

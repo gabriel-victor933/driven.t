@@ -32,7 +32,7 @@ async function putBooking(userId: number, roomId: number, bookingId: number){
 
 async function getBookingById(bookingId: number, userId: number){
     const booking = await bookingRepository.getBookingById(bookingId,userId)
-    console.log(booking)
+    
     if(!booking) throw forbiddenError("User has no Booking")
 
     return booking
@@ -40,9 +40,12 @@ async function getBookingById(bookingId: number, userId: number){
 
 async function validateUser(userId: number){
     const enrollment = await enrollmentRepository.findWithAddressByUserId(userId)
+    
+    
     if(!enrollment) throw forbiddenError("User has no enrollment")
 
     const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id)
+    
     if(!ticket) throw  forbiddenError("User has no ticket")
     if(!ticket.TicketType.includesHotel || ticket.TicketType.isRemote || ticket.status !== 'PAID') throw  forbiddenError()
 
