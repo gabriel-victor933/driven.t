@@ -66,3 +66,9 @@ export type InputTicketBody = {
 export type bookingBody = {
   roomId: number
 }
+
+export type bookingError = {
+  message: string | void,
+  status: number
+  type: string
+}
