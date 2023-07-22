@@ -62,3 +62,19 @@ describe("Post /booking",()=>{
         expect(bookingService.postBooking(1,1)).rejects.toEqual(forbiddenError("Room has already reached maximum capacity"))
     }) 
 })
+
+describe("PUT /booking/:bookingId",()=>{
+    //
+    it("should throw FORBIDDEN IF room has already reached maximum capacity",async ()=>{
+        jest.spyOn(bookingRepository,"getRoomById").mockResolvedValue(createRoomBookingData(1))
+
+        expect(bookingService.putBooking(1,1,1)).rejects.toEqual(forbiddenError("Room has already reached maximum capacity"))
+    }) 
+
+    it("should throw FORBIDDEN if user has no booking",async ()=>{
+        jest.spyOn(bookingRepository,"getRoomById").mockResolvedValue(createRoomBookingData(2))
+        jest.spyOn(bookingRepository,"getBookingById").mockResolvedValue(null)
+
+        expect(bookingService.putBooking(1,1,1)).rejects.toEqual(forbiddenError("User has no Booking"))
+    })
+})

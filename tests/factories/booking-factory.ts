@@ -7,12 +7,12 @@ export function createBooking(userId: number, roomId:number){
     })
 }
 
-export function createRoomBookingData(){
+export function createRoomBookingData(capacity = 1){
     const  roomID = parseInt(faker.random.numeric(4))
     return {
         id: roomID,
         name: '1020',
-        capacity: 1,
+        capacity: capacity,
         hotelId: parseInt(faker.random.numeric(4)),
         createdAt: faker.datatype.datetime(),
         updatedAt: faker.datatype.datetime(),
