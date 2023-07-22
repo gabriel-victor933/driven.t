@@ -33,7 +33,7 @@ async function putBooking(userId: number, roomId: number, bookingId: number){
 async function getBookingById(bookingId: number, userId: number){
     const booking = await bookingRepository.getBookingById(bookingId,userId)
     console.log(booking)
-    if(!booking) throw notFound("User has no Booking")
+    if(!booking) throw forbiddenError("User has no Booking")
 
     return booking
 }
