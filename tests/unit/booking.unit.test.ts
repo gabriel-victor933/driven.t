@@ -4,7 +4,7 @@ import enrollmentRepository from "@/repositories/enrollment-repository"
 import ticketsRepository from '@/repositories/tickets-repository';
 import bookingService from "@/services/booking-service"
 import { forbiddenError } from "@/errors"
-import { createEnrollmentData, createTicketData } from "../factories"
+import { createEnrollmentData, createTicketData,createRoomBookingData } from "../factories"
 import faker from "@faker-js/faker"
 
 describe("Post /booking",()=>{
@@ -34,7 +34,7 @@ describe("Post /booking",()=>{
         expect(bookingService.postBooking(1,1)).rejects.toEqual(forbiddenError())
     })
 
-    it("should throw FORBIDDEN if ticket is not paid",async ()=>{
+    it("should throw FORBIDDEN if ticket is remote",async ()=>{
 
         jest.spyOn(enrollmentRepository,"findWithAddressByUserId").mockResolvedValue(createEnrollmentData())
         jest.spyOn(ticketsRepository,"findTicketByEnrollmentId")
@@ -43,12 +43,22 @@ describe("Post /booking",()=>{
         expect(bookingService.postBooking(1,1)).rejects.toEqual(forbiddenError())
     })
 
-    it("should throw FORBIDDEN if ticket is not paid",async ()=>{
+    it("should throw FORBIDDEN if ticket is dont include hotel",async ()=>{
 
         jest.spyOn(enrollmentRepository,"findWithAddressByUserId").mockResolvedValue(createEnrollmentData())
         jest.spyOn(ticketsRepository,"findTicketByEnrollmentId")
-            .mockResolvedValueOnce(createTicketData("RESERVED",false,false))
+            .mockResolvedValueOnce(createTicketData("PAID",false,false))
 
         expect(bookingService.postBooking(1,1)).rejects.toEqual(forbiddenError())
     })
+
+    it("should throw FORBIDDEN IF room has already reached maximum capacity",async ()=>{
+        jest.spyOn(enrollmentRepository,"findWithAddressByUserId").mockResolvedValue(createEnrollmentData())
+        jest.spyOn(ticketsRepository,"findTicketByEnrollmentId")
+            .mockResolvedValueOnce(createTicketData("PAID",false,true))
+
+        jest.spyOn(bookingRepository,"getRoomById").mockResolvedValue(createRoomBookingData())
+
+        expect(bookingService.postBooking(1,1)).rejects.toEqual(forbiddenError("Room has already reached maximum capacity"))
+    }) 
 })

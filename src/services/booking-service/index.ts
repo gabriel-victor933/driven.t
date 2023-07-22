@@ -53,6 +53,7 @@ async function validateUser(userId: number){
 
 async function verifyRoom(roomId: number){
     const room = await bookingRepository.getRoomById(roomId)
+    console.log(room)
     if(!room) throw notFound("Room not found")
     if(room.capacity <= room.Booking.length) throw forbiddenError("Room has already reached maximum capacity")
 }
