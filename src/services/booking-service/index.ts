@@ -5,12 +5,11 @@ import { forbiddenError, notFound } from "@/errors"
 
 async function postBooking(userId: number, roomId: number){
     await validateUser(userId)
+   
+    await verifyRoom(roomId)
 
-    const room = await bookingRepository.getRoomById(roomId)
-    console.log(room)
-    if(!room) throw notFound("Room not found")
-
-    return 1
+    const booking = await bookingRepository.createBooking(userId,roomId)
+    return booking.id
 }
 
 async function validateUser(userId: number){
@@ -19,9 +18,14 @@ async function validateUser(userId: number){
 
     const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id)
     if(!ticket) throw  forbiddenError("User has no ticket")
+    if(!ticket.TicketType.includesHotel || ticket.TicketType.isRemote || ticket.status !== 'PAID') throw  forbiddenError()
 
-    if(!ticket.TicketType.includesHotel || ticket.TicketType.isRemote || ticket.status !== 'PAID') return  forbiddenError()
-    
+}
+
+async function verifyRoom(roomId: number){
+    const room = await bookingRepository.getRoomById(roomId)
+    if(!room) throw notFound("Room not found")
+    if(room.capacity <= room.Booking.length) throw forbiddenError("Room has already reached maximum capacity")
 }
 
 const bookingService = {
